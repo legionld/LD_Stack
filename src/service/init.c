@@ -6,25 +6,11 @@
 /*   By: jschille <jschille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/30 20:16:40 by jschille          #+#    #+#             */
-/*   Updated: 2019/03/30 21:41:34 by jschille         ###   ########.fr       */
+/*   Updated: 2019/03/31 15:29:13 by jschille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ld_stack.h"
-
-static int		ld_push(t_ld_stack *stack, int val)
-{
-    int     index;
-
-    if ((index = stack->get_ti(stack)) == 0)
-        return (0);
-	if (index == -1)
-		index = stack->size;
-    stack->arr[index - 1] = val;
-	stack->en[index - 1] = 1;
-	stack->top = index - 1;
-	return (1);
-}
 
 static int		ld_get_ti(t_ld_stack *stack)
 {
@@ -37,12 +23,28 @@ static int		ld_get_ti(t_ld_stack *stack)
     return (-1);
 }
 
+static void		print_stack(t_ld_stack *stack)
+{
+	int		i;
+
+	i = -1;
+	while (++i < stack->size)
+	{	if (stack->en[i] == 0)
+			ft_putchar('-');
+		else
+			ft_putnbr(stack->arr[i]);
+		ft_putchar('\n');
+	}
+}
+
 static int		fill_stack(t_ld_stack *stack, int num)
 {
 	stack->size = num;
 	stack->top = -1;
-	stack->push = ld_push;
+	stack->print = print_stack;
 	stack->get_ti = ld_get_ti;
+	ld_set_operations(stack);
+	ld_set_destructors(stack);
 	return (1);
 }
 
